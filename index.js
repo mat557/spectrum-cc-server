@@ -18,13 +18,13 @@ async function run(){
   try{
     await client.connect();
     const userCollection = client.db('spectrum-collection').collection('users');
+    const courseCollection = client.db('spectrum-collection').collection('courses');
     
 
 
     app.put('/users/:email',async(req,res)=>{
       const email = req.params.email;
       const user = req.body;
-      console.log(user,email)
       const filter = {email:email}
       const options = { upsert : true}
       const updateDoc = {
@@ -32,7 +32,16 @@ async function run(){
       }
       const result = await userCollection.updateOne(filter, updateDoc, options);
       res.send(result);
-    })
+    });
+
+
+    app.get('/courses',async(req,res)=>{
+      const result = await courseCollection.find().toArray()
+      res.send(result);
+    });
+
+
+
   }
   finally{}
 }
